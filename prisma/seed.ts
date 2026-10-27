@@ -18,67 +18,102 @@ async function main() {
     },
   })
 
-  console.log("Admin created:", admin.email)
+  console.log("Admin ready:", admin.email)
+
+  // Clear existing plans so we can seed the exact client plans
+  await prisma.investment.deleteMany({})
+  await prisma.investmentPlan.deleteMany({})
 
   const plans = [
     {
-      name: "Starter",
-      description: "Perfect for beginners",
-      minAmount: 50,
+      name: "Starter Plan",
+      description: "5.50% after 24 hours",
+      minAmount: 100,
       maxAmount: 499,
-      dailyRoiPercent: 5,
-      durationDays: 7,
+      dailyRoiPercent: 5.5,
+      durationDays: 1,
       capitalReturn: true,
+      isActive: true,
     },
     {
-      name: "Growth",
-      description: "Most popular plan",
+      name: "Elite Plan",
+      description: "8.90% after 24 hours",
       minAmount: 500,
+      maxAmount: 999,
+      dailyRoiPercent: 8.9,
+      durationDays: 1,
+      capitalReturn: true,
+      isActive: true,
+    },
+    {
+      name: "Deluxe Plan",
+      description: "11.50% after 24 hours",
+      minAmount: 1000,
       maxAmount: 1999,
-      dailyRoiPercent: 7,
-      durationDays: 14,
+      dailyRoiPercent: 11.5,
+      durationDays: 1,
       capitalReturn: true,
+      isActive: true,
     },
     {
-      name: "Premium",
-      description: "Higher returns for serious investors",
+      name: "Superior Plan",
+      description: "15% after 48 hours",
       minAmount: 2000,
-      maxAmount: 9999,
-      dailyRoiPercent: 10,
-      durationDays: 30,
+      maxAmount: 4999,
+      dailyRoiPercent: 15,
+      durationDays: 2,
       capitalReturn: true,
+      isActive: true,
     },
     {
-      name: "Tesla VIP",
-      description: "Exclusive high-capital plan",
-      minAmount: 10000,
-      maxAmount: null,
-      dailyRoiPercent: 12,
-      durationDays: 45,
+      name: "Ultimate Plan",
+      description: "15.50% after 24 hours",
+      minAmount: 5000,
+      maxAmount: 8999,
+      dailyRoiPercent: 15.5,
+      durationDays: 1,
       capitalReturn: true,
+      isActive: true,
+    },
+    {
+      name: "Platinum VIP Plan",
+      description: "15% after 24 hours · Unlimited",
+      minAmount: 9000,
+      maxAmount: null,
+      dailyRoiPercent: 15,
+      durationDays: 1,
+      capitalReturn: true,
+      isActive: true,
     },
   ]
 
   for (const p of plans) {
     await prisma.investmentPlan.create({ data: p as any })
+    console.log("Plan created:", p.name)
   }
 
   await prisma.siteSetting.upsert({
     where: { id: "default" },
-    update: {},
+    update: {
+      minDeposit: 100,
+      minWithdrawal: 50,
+    },
     create: {
       id: "default",
       siteName: "Tesla Investment",
       supportEmail: "support@teslainvest.com",
-      minDeposit: 50,
-      minWithdrawal: 20,
+      minDeposit: 100,
+      minWithdrawal: 50,
       referralPercent: 5,
     },
   })
 
-  console.log("Seed completed")
+  console.log("Seed completed successfully")
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
   .finally(() => prisma.$disconnect())

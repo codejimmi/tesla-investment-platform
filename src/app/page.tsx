@@ -1,0 +1,209 @@
+import Link from "next/link"
+import { ArrowRight, Shield, TrendingUp, Zap, Lock, Users, BarChart3 } from "lucide-react"
+
+const plans = [
+  { name: "Starter Plan", roi: "5.50%", period: "After 24 Hours", range: "$100 – $499", popular: false },
+  { name: "Elite Plan", roi: "8.90%", period: "After 24 Hours", range: "$500 – $999", popular: true },
+  { name: "Deluxe Plan", roi: "11.50%", period: "After 24 Hours", range: "$1,000 – $1,999", popular: false },
+  { name: "Superior Plan", roi: "15%", period: "After 48 Hours", range: "$2,000 – $4,999", popular: false },
+  { name: "Ultimate Plan", roi: "15.50%", period: "After 24 Hours", range: "$5,000 – $8,999", popular: false },
+  { name: "Platinum VIP", roi: "15%", period: "After 24 Hours", range: "$9,000 – Unlimited", popular: false },
+]
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-tesla-dark text-white">
+      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-tesla-red rounded-sm flex items-center justify-center font-bold text-sm">T</div>
+              <span className="font-semibold text-lg tracking-tight">Tesla Investment</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8 text-sm">
+              <a href="#plans" className="hover:text-tesla-red transition">Plans</a>
+              <a href="#how" className="hover:text-tesla-red transition">How it Works</a>
+              <a href="#features" className="hover:text-tesla-red transition">Features</a>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="text-sm px-4 py-2 hover:text-tesla-red transition">
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="text-sm px-5 py-2 bg-tesla-red hover:bg-red-700 rounded-full font-medium transition"
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-tesla-red/10 via-transparent to-transparent" />
+        <div className="max-w-5xl mx-auto text-center relative">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+            Invest in the
+            <span className="text-tesla-red"> Future</span>
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+            Premium crypto investment platform. Secure plans, transparent returns, and institutional-grade security.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-tesla-red hover:bg-red-700 rounded-full font-semibold text-lg transition"
+            >
+              Start Investing <ArrowRight className="w-5 h-5" />
+            </Link>
+            <a
+              href="#plans"
+              className="inline-flex items-center justify-center px-8 py-4 border border-white/20 hover:bg-white/5 rounded-full font-semibold text-lg transition"
+            >
+              View Plans
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 border-y border-white/10">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: "Active Investors", value: "12,400+" },
+            { label: "Total Invested", value: "$48M+" },
+            { label: "Returns", value: "5.5% – 15.5%" },
+            { label: "Supported Assets", value: "BTC · ETH · USDT" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <div className="text-3xl font-bold text-white">{stat.value}</div>
+              <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="plans" className="py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Investment Plans</h2>
+            <p className="text-gray-400">Choose the plan that matches your capital</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {plans.map((plan) => (
+              <div
+                key={plan.name}
+                className={`relative rounded-2xl p-6 border ${
+                  plan.popular
+                    ? "border-tesla-red bg-tesla-red/5"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                {plan.popular && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-tesla-red text-xs font-semibold px-3 py-1 rounded-full">
+                    Popular
+                  </span>
+                )}
+                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                <div className="text-4xl font-bold text-tesla-red mb-1">{plan.roi}</div>
+                <div className="text-sm text-gray-400 mb-4">{plan.period}</div>
+                <div className="text-sm mb-6">
+                  Range: <span className="font-medium">{plan.range}</span>
+                </div>
+                <Link
+                  href="/register"
+                  className={`block text-center py-3 rounded-full font-medium transition ${
+                    plan.popular
+                      ? "bg-tesla-red hover:bg-red-700"
+                      : "bg-white/10 hover:bg-white/20"
+                  }`}
+                >
+                  Invest Now
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="py-24 px-4 bg-black/40">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Why Tesla Investment</h2>
+            <p className="text-gray-400">Built for serious investors</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: Shield, title: "Bank-Grade Security", desc: "Encrypted wallets, full audit logs and role-based admin access." },
+              { icon: TrendingUp, title: "Transparent Returns", desc: "Clear maturity times and capital return on every plan." },
+              { icon: Zap, title: "Fast Activation", desc: "Manual verification keeps funds safe with quick processing." },
+              { icon: Lock, title: "Multi-Chain Support", desc: "Deposit & withdraw with BTC, ETH, USDT ERC-20 and TRC-20." },
+              { icon: Users, title: "Referral Program", desc: "Earn from your network with configurable commissions." },
+              { icon: BarChart3, title: "Full Control Dashboard", desc: "Sophisticated user & admin panels with complete history." },
+            ].map((f) => (
+              <div key={f.title} className="p-6 rounded-2xl border border-white/10 bg-white/5">
+                <f.icon className="w-10 h-10 text-tesla-red mb-4" />
+                <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="how" className="py-24 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">How It Works</h2>
+          </div>
+          <div className="space-y-8">
+            {[
+              { step: "01", title: "Create Account", desc: "Register in under a minute with your email." },
+              { step: "02", title: "Deposit Crypto", desc: "Send BTC, ETH or USDT and upload proof of payment." },
+              { step: "03", title: "Choose a Plan", desc: "Select an investment plan that fits your capital." },
+              { step: "04", title: "Earn Returns", desc: "Receive your profit after the plan period and withdraw anytime." },
+            ].map((item) => (
+              <div key={item.step} className="flex gap-6 items-start">
+                <div className="text-4xl font-bold text-tesla-red/40">{item.step}</div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-1">{item.title}</h3>
+                  <p className="text-gray-400">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 px-4">
+        <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-tesla-red/20 to-transparent border border-tesla-red/30 rounded-3xl p-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to accelerate your portfolio?</h2>
+          <p className="text-gray-400 mb-8">Join investors already earning with Tesla Investment.</p>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-tesla-red hover:bg-red-700 rounded-full font-semibold text-lg transition"
+          >
+            Create Free Account <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+
+      <footer className="border-t border-white/10 py-12 px-4">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-tesla-red rounded-sm flex items-center justify-center font-bold text-xs">T</div>
+            <span className="font-semibold">Tesla Investment</span>
+          </div>
+          <div className="text-sm text-gray-500">
+            © {new Date().getFullYear()} Tesla Investment. All rights reserved.
+          </div>
+          <div className="flex gap-6 text-sm text-gray-400">
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/contact" className="hover:text-white">Contact</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
