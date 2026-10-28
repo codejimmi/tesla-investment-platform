@@ -14,16 +14,19 @@ import {
   LogOut,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/components/theme-provider"
 
 const navItems = [
-  { href: "/user/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/user/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/user/deposit", label: "Deposit", icon: ArrowDownToLine },
   { href: "/user/withdraw", label: "Withdraw", icon: ArrowUpFromLine },
-  { href: "/user/plans", label: "Investment Plans", icon: Layers },
-  { href: "/user/investments", label: "My Investments", icon: Briefcase },
+  { href: "/user/plans", label: "Plans", icon: Layers },
+  { href: "/user/investments", label: "Investments", icon: Briefcase },
   { href: "/user/history", label: "History", icon: History },
   { href: "/user/profile", label: "Profile", icon: User },
 ]
@@ -31,39 +34,40 @@ const navItems = [
 export function UserSidebar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const { theme, toggle } = useTheme()
 
   return (
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-tesla-dark border border-white/10 text-white"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white shadow-sm"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {open && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/60 z-40"
+          className="lg:hidden fixed inset-0 bg-black/40 z-40"
           onClick={() => setOpen(false)}
         />
       )}
 
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-full w-64 bg-tesla-dark border-r border-white/10 flex flex-col transition-transform lg:translate-x-0",
+          "fixed top-0 left-0 z-40 h-full w-64 bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 flex flex-col transition-transform lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="p-6 border-b border-white/10">
+        <div className="p-6 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-tesla-red rounded-sm flex items-center justify-center font-bold text-sm text-white">
+            <div className="w-9 h-9 bg-tesla-red rounded-xl flex items-center justify-center font-bold text-white text-sm">
               T
             </div>
-            <span className="font-semibold text-white tracking-tight">Tesla Investment</span>
+            <span className="font-semibold text-zinc-900 dark:text-white tracking-tight">Tesla Investment</span>
           </Link>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const active = pathname === item.href
             return (
@@ -72,10 +76,10 @@ export function UserSidebar() {
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition",
                   active
-                    ? "bg-tesla-red/15 text-tesla-red"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-tesla-red text-white"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-white"
                 )}
               >
                 <item.icon size={18} />
@@ -85,10 +89,17 @@ export function UserSidebar() {
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 space-y-1">
+          <button
+            onClick={toggle}
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
           >
             <LogOut size={18} />
             Sign Out
