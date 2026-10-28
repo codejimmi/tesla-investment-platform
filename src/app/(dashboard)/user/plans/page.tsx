@@ -19,13 +19,17 @@ type Plan = {
 export default function PlansPage() {
   const { data: session } = useSession()
   const [plans, setPlans] = useState<Plan[]>([])
+  const [balance, setBalance] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/api/admin/plans")
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) setPlans(data.filter((p: Plan) => p.isActive))
+    Promise.all([
+      fetch("/api/admin/plans").then((r) => r.json()),
+      fetch("/api/user/balance").then((r) => r.json()),
+    ])
+      .then(([plansData, balanceData]) => {
+        if (Array.isArray(plansData)) setPlans(plansData.filter((p: Plan) => p.isActive))
+        if (typeof balanceData.balance === "number") setBalance(balanceData.balance)
       })
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -67,7 +71,13 @@ export default function PlansPage() {
               {plan.description && (
                 <p className="text-xs text-gray-500 mb-6">{plan.description}</p>
               )}
-              <InvestButton plan={plan} />
+              <InvestButton
+                planId={plan.id}
+                planName={plan.name}
+                minAmount={Number(plan.minAmount)}
+                maxAmount={plan.maxAmount ? Number(plan.maxAmount) : undefined}
+                balance={balance}
+              />
             </div>
           ))}
         </div>
