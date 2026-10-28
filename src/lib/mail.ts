@@ -39,12 +39,12 @@ export async function sendMail({
 
     if (!settings) {
       console.warn("SMTP not configured, skipping email")
-      return { skipped: true }
+      return false
     }
 
     const transporter = await getTransporter()
 
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"${settings.fromName}" <${settings.fromEmail}>`,
       to,
       subject,
@@ -52,9 +52,23 @@ export async function sendMail({
       text,
     })
 
-    return { success: true, messageId: info.messageId }
+    return true
   } catch (error) {
     console.error("Failed to send email:", error)
-    return { success: false, error }
+    return false
   }
+}
+
+// Alias used by admin routes
+export const sendEmail = sendMail
+
+export function depositApprovedHtml(amount: string, currency: string) {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #cc0000;">Deposit Approved</h2>
+      <p>Your deposit of <strong>${amount} ${currency}</strong> has been approved and credited to your Tesla Investment account.</p>
+      <p>You can now use these funds to invest in available plans.</p>
+      <p style="color: #666; font-size: 12px; margin-top: 30px;">Tesla Investment Platform</p>
+    </div>
+  `
 }
