@@ -50,27 +50,27 @@ export function InvestButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full py-3 bg-tesla-red hover:bg-red-700 rounded-lg font-medium transition"
+        className="w-full py-3 bg-tesla-red hover:bg-red-700 text-white rounded-xl font-medium transition"
       >
         Invest Now
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-          <div className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-md space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 w-full max-w-md space-y-4 shadow-xl">
             <h3 className="text-lg font-semibold">Invest in {planName}</h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
               Available balance: ${balance.toFixed(2)}
             </p>
 
             {error && (
-              <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 px-3 py-2 rounded-lg">
+              <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 px-3 py-2 rounded-xl">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm text-gray-400 mb-1">Amount (USD)</label>
+              <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Amount (USD)</label>
               <input
                 type="number"
                 min={minAmount}
@@ -78,9 +78,9 @@ export function InvestButton({
                 step="0.01"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-tesla-red"
+                className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:border-tesla-red"
               />
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-zinc-500 mt-1.5">
                 Min: ${minAmount}
                 {maxAmount ? ` · Max: $${maxAmount}` : ""}
               </div>
@@ -89,14 +89,14 @@ export function InvestButton({
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setOpen(false)}
-                className="flex-1 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 transition"
+                className="flex-1 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleInvest}
                 disabled={loading}
-                className="flex-1 py-2.5 rounded-lg bg-tesla-red hover:bg-red-700 disabled:opacity-50 transition font-medium"
+                className="flex-1 py-2.5 rounded-xl bg-tesla-red hover:bg-red-700 disabled:opacity-50 text-white transition font-medium"
               >
                 {loading ? "Processing..." : "Confirm Invest"}
               </button>

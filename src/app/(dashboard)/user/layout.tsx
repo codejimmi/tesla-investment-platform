@@ -17,7 +17,9 @@ export default async function UserLayout({
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <UserSidebar />
       <main className="lg:pl-64 min-h-screen">
-        <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">{children}</div>
+        <div className="pt-16 lg:pt-6 px-4 sm:px-6 lg:px-8 pb-8 max-w-6xl mx-auto">
+          {children}
+        </div>
       </main>
     </div>
   )

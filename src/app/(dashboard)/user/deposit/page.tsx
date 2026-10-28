@@ -116,20 +116,20 @@ export default function DepositPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
+    <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Deposit Funds</h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">
           Send crypto to the address below and upload proof of payment for approval.
         </p>
       </div>
 
       {message && (
         <div
-          className={`px-4 py-3 rounded-lg text-sm ${
+          className={`px-4 py-3 rounded-xl text-sm ${
             message.type === "success"
-              ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-              : "bg-red-500/10 border border-red-500/30 text-red-400"
+              ? "bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
+              : "bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-400"
           }`}
         >
           {message.text}
@@ -141,50 +141,50 @@ export default function DepositPage() {
           <button
             key={w.currency}
             onClick={() => setSelected(w.currency)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
               selected === w.currency
                 ? "bg-tesla-red text-white"
-                : "bg-white/10 text-gray-300 hover:bg-white/15"
+                : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700"
             }`}
           >
             {LABELS[w.currency] || w.currency.replace("_", " ")}
           </button>
         ))}
         {wallets.length === 0 && (
-          <p className="text-gray-500 text-sm">No payment methods configured yet. Contact support.</p>
+          <p className="text-zinc-500 text-sm">No payment methods configured yet. Contact support.</p>
         )}
       </div>
 
       {currentWallet && (
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-4">
           <div>
-            <div className="text-sm text-gray-400 mb-1">Send to this address</div>
+            <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Send to this address</div>
             <div className="flex items-center gap-2">
-              <div className="flex-1 bg-black/40 rounded-lg p-4 font-mono text-sm break-all select-all">
+              <div className="flex-1 bg-zinc-50 dark:bg-zinc-800 rounded-xl p-4 font-mono text-sm break-all select-all border border-zinc-200 dark:border-zinc-700">
                 {currentWallet.address}
               </div>
               <button
                 onClick={copyAddress}
-                className="p-3 bg-white/10 hover:bg-white/15 rounded-lg transition"
+                className="p-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition border border-zinc-200 dark:border-zinc-700"
                 title="Copy address"
               >
-                {copied ? <Check size={18} className="text-emerald-400" /> : <Copy size={18} />}
+                {copied ? <Check size={18} className="text-emerald-500" /> : <Copy size={18} />}
               </button>
             </div>
             {currentWallet.network && (
-              <div className="text-xs text-amber-400 mt-2">Network: {currentWallet.network}</div>
+              <div className="text-xs text-amber-600 dark:text-amber-400 mt-2">Network: {currentWallet.network}</div>
             )}
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-zinc-500">
             Only send {LABELS[currentWallet.currency] || currentWallet.currency} to this address. Sending other
             assets may result in permanent loss.
           </p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-5">
         <div>
-          <label className="block text-sm text-gray-400 mb-1.5">Amount (USD equivalent)</label>
+          <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Amount (USD equivalent)</label>
           <input
             type="number"
             step="0.01"
@@ -192,24 +192,24 @@ export default function DepositPage() {
             required
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-tesla-red"
+            className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:border-tesla-red"
             placeholder="100.00"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1.5">Transaction Hash (optional but recommended)</label>
+          <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Transaction Hash (optional but recommended)</label>
           <input
             type="text"
             value={txHash}
             onChange={(e) => setTxHash(e.target.value)}
-            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-tesla-red font-mono text-sm"
+            className="w-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-4 py-3 text-zinc-900 dark:text-white focus:outline-none focus:border-tesla-red font-mono text-sm"
             placeholder="0x... or blockchain tx id"
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1.5">Proof of Payment (screenshot)</label>
+          <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Proof of Payment (screenshot)</label>
           <input
             ref={fileInputRef}
             type="file"
@@ -222,26 +222,26 @@ export default function DepositPage() {
               <img
                 src={proofImage}
                 alt="Proof"
-                className="max-h-48 rounded-lg border border-white/10"
+                className="max-h-48 rounded-xl border border-zinc-200 dark:border-zinc-700"
               />
               <button
                 type="button"
                 onClick={clearProof}
-                className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white"
+                className="absolute -top-2 -right-2 p-1 bg-tesla-red rounded-full text-white"
               >
                 <X size={14} />
               </button>
-              <div className="text-xs text-gray-400 mt-1">{proofFileName}</div>
+              <div className="text-xs text-zinc-500 mt-1">{proofFileName}</div>
             </div>
           ) : (
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-white/20 hover:border-white/40 rounded-lg p-8 flex flex-col items-center gap-2 text-gray-400 hover:text-white transition"
+              className="w-full border-2 border-dashed border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 rounded-xl p-8 flex flex-col items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition"
             >
               <Upload size={24} />
               <span className="text-sm">Click to upload screenshot</span>
-              <span className="text-xs text-gray-500">PNG, JPG up to 5MB</span>
+              <span className="text-xs text-zinc-400">PNG, JPG up to 5MB</span>
             </button>
           )}
         </div>
@@ -249,7 +249,7 @@ export default function DepositPage() {
         <button
           type="submit"
           disabled={loading || !selected}
-          className="w-full bg-tesla-red hover:bg-red-700 disabled:opacity-50 font-semibold py-3 rounded-lg transition"
+          className="w-full bg-tesla-red hover:bg-red-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
         >
           {loading ? "Submitting..." : "Submit Deposit Request"}
         </button>
