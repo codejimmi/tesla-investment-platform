@@ -9,15 +9,26 @@ async function requireAdmin() {
   return session
 }
 
+export async function GET() {
+  const session = await requireAdmin()
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+  const plans = await prisma.investmentPlan.findMany({
+    orderBy: { minAmount: "asc" },
+  })
+
+  return NextResponse.json(plans)
+}
+
 export async function POST(req: Request) {
   const session = await requireAdmin()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   try {
     const body = await req.json()
-    const { name, description, minAmount, maxAmount, dailyRoiPercent, durationDays, capitalReturn } = body
+    const { name, description, minAmount, maxAmount, dailyRoiPercent, durationDays, capitalReturn, isActive } = body
 
-    if (!name || !minAmount || !dailyRoiPercent || !durationDays) {
+    if (!name || minAmount == null || dailyRoiPercent == null || durationDays == null) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
@@ -30,6 +41,7 @@ export async function POST(req: Request) {
         dailyRoiPercent,
         durationDays,
         capitalReturn: capitalReturn ?? true,
+        isActive: isActive ?? true,
       },
     })
 
@@ -59,6 +71,7 @@ export async function PUT(req: Request) {
         dailyRoiPercent: data.dailyRoiPercent,
         durationDays: data.durationDays,
         capitalReturn: data.capitalReturn,
+        isActive: data.isActive,
       },
     })
 
