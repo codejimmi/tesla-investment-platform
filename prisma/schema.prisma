@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INVESTMENT
+  PROFIT
+  REFERRAL
+  ADJUSTMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum CryptoCurrency {
+  BTC
+  ETH
+  USDT_ERC20
+  USDT_TRC20
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  role          Role      @default(USER)
+  balance       Decimal   @default(0) @db.Decimal(18, 8)
+  isActive      Boolean   @default(true)
+  referralCode  String    @unique @default(cuid())
+  referredById  String?
+  referredBy    User?     @relation("Referrals", fields: [referredById], references: [id])
+  referrals     User[]    @relation("Referrals")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+
+  transactions  Transaction[]
+  investments   Investment[]
+  activityLogs  ActivityLog[]
+
+  @@index([email])
+  @@index([referralCode])
+}
+
+model InvestmentPlan {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  minAmount       Decimal  @db.Decimal(18, 8)
+  maxAmount       Decimal? @db.Decimal(18, 8)
+  dailyRoiPercent Decimal  @db.Decimal(8, 4)
+  durationDays    Int
+  capitalReturn   Boolean  @default(true)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  investments     Investment[]
+}
+
+model Investment {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId          String
+  plan            InvestmentPlan   @relation(fields: [planId], references: [id])
+  amount          Decimal          @db.Decimal(18, 8)
+  dailyProfit     Decimal          @db.Decimal(18, 8)
+  totalExpected   Decimal          @db.Decimal(18, 8)
+  totalEarned     Decimal          @default(0) @db.Decimal(18, 8)
+  status          InvestmentStatus @default(ACTIVE)
+  startDate       DateTime         @default(now())
+  endDate         DateTime
+  lastProfitAt    DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Transaction {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  amount        Decimal           @db.Decimal(18, 8)
+  currency      CryptoCurrency?
+  txHash        String?
+  proofUrl      String?
+  walletAddress String?
+  adminNote     String?
+  processedBy   String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([type, status])
+}
+
+model PaymentWallet {
+  id        String         @id @default(cuid())
+  currency  CryptoCurrency @unique
+  address   String
+  network   String?
+  isActive  Boolean        @default(true)
+  qrCodeUrl String?
+  updatedAt DateTime       @updatedAt
+  createdAt DateTime       @default(now())
+}
+
+model SmtpSetting {
+  id        String   @id @default("default")
+  host      String
+  port      Int
+  username  String
+  password  String
+  fromEmail String
+  fromName  String   @default("Tesla Investment")
+  secure    Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id                String  @id @default("default")
+  siteName          String  @default("Tesla Investment")
+  supportEmail      String  @default("support@teslainvest.com")
+  minDeposit        Decimal @default(50) @db.Decimal(18, 8)
+  minWithdrawal     Decimal @default(20) @db.Decimal(18, 8)
+  referralPercent   Decimal @default(5) @db.Decimal(5, 2)
+  maintenanceMode   Boolean @default(false)
+  updatedAt         DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
