@@ -43,7 +43,7 @@ export function AdminSidebar() {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white shadow-sm"
+        className="lg:hidden fixed top-4 right-4 z-50 p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white shadow-sm"
       >
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
