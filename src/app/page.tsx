@@ -12,9 +12,9 @@ const plans = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       {/* Nav */}
-      <nav className="fixed top-0 w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10">
+      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
@@ -43,10 +43,9 @@ export default function HomePage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative pt-28 pb-20 px-4 overflow-hidden">
+      <section className="relative pt-28 pb-16 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-tesla-red/10 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-tesla-red/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-tesla-red/10 border border-tesla-red/20 rounded-full text-xs text-tesla-red font-medium mb-6">
@@ -79,29 +78,17 @@ export default function HomePage() {
                 <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Capital returned</div>
               </div>
             </div>
+
             <div className="relative">
-              <div className="bg-gradient-to-br from-white/10 to-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="text-sm text-gray-400">Portfolio Value</div>
-                  <div className="text-xs px-2 py-1 bg-emerald-500/20 text-emerald-400 rounded-full">+12.4%</div>
-                </div>
-                <div className="text-4xl font-bold mb-2">$48,290.50</div>
-                <div className="text-sm text-gray-500 mb-6">Across 3 active plans</div>
-                <div className="space-y-3">
-                  {[
-                    { name: "Elite Plan", value: "$2,400", roi: "+8.9%" },
-                    { name: "Deluxe Plan", value: "$5,200", roi: "+11.5%" },
-                    { name: "Ultimate Plan", value: "$8,100", roi: "+15.5%" },
-                  ].map((item) => (
-                    <div key={item.name} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-                      <div className="text-sm">{item.name}</div>
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm font-medium">{item.value}</span>
-                        <span className="text-xs text-emerald-400">{item.roi}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="absolute -inset-4 bg-gradient-to-tr from-tesla-red/20 to-transparent rounded-3xl blur-2xl" />
+              <img
+                src="https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1200&q=80"
+                alt="Bitcoin and Ethereum with trading charts"
+                className="relative rounded-3xl border border-white/10 shadow-2xl w-full object-cover aspect-[4/3]"
+              />
+              <div className="absolute -bottom-6 -left-6 bg-black/80 backdrop-blur border border-white/10 rounded-2xl p-4 shadow-xl hidden sm:block">
+                <div className="text-xs text-gray-400">24h Return</div>
+                <div className="text-2xl font-bold text-emerald-400">+8.90%</div>
               </div>
             </div>
           </div>
@@ -169,6 +156,24 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Image break */}
+      <section className="relative h-[420px] overflow-hidden">
+        <img
+          src="https://images.pexels.com/photos/32299962/pexels-photo-32299962.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Professional crypto trading desk"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 flex items-center">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-md">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Trade with clarity</h2>
+              <p className="text-gray-300">Real-time visibility into your portfolio, deposits, and returns — all in one secure dashboard.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section id="features" className="py-24 px-4 bg-black/40">
         <div className="max-w-6xl mx-auto">
@@ -226,25 +231,37 @@ export default function HomePage() {
 
       {/* Security */}
       <section id="security" className="py-24 px-4 bg-black/40">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-tesla-red/10 rounded-2xl mb-6">
-            <Shield className="w-8 h-8 text-tesla-red" />
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-tesla-red/10 rounded-2xl mb-6">
+              <Shield className="w-8 h-8 text-tesla-red" />
+            </div>
+            <h2 className="text-4xl font-bold mb-4">Your Funds, Protected</h2>
+            <p className="text-gray-400 leading-relaxed mb-6">
+              Every deposit is manually verified. Withdrawals require admin approval. Full activity logs ensure complete transparency. Your capital is returned at the end of every plan.
+            </p>
+            <div className="space-y-4">
+              {[
+                { title: "Manual Verification", desc: "Every deposit is reviewed before crediting." },
+                { title: "Admin Oversight", desc: "Withdrawals are processed manually for maximum security." },
+                { title: "Full Audit Trail", desc: "Every action is logged and visible in your history." },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-medium">{item.title}</div>
+                    <div className="text-sm text-gray-400">{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h2 className="text-4xl font-bold mb-4">Your Funds, Protected</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Every deposit is manually verified. Withdrawals require admin approval. Full activity logs ensure complete transparency. Your capital is returned at the end of every plan.
-          </p>
-          <div className="grid md:grid-cols-3 gap-6 text-left">
-            {[
-              { title: "Manual Verification", desc: "Every deposit is reviewed before crediting to prevent fraud." },
-              { title: "Admin Oversight", desc: "Withdrawals are processed manually for maximum security." },
-              { title: "Full Audit Trail", desc: "Every action is logged. Complete history is always available." },
-            ].map((item) => (
-              <div key={item.title} className="p-5 rounded-xl border border-white/10 bg-white/5">
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-400">{item.desc}</p>
-              </div>
-            ))}
+          <div className="relative">
+            <img
+              src="https://images.unsplash.com/photo-1641352109623-f7b1eff605fd?auto=format&fit=crop&w=1000&q=80"
+              alt="Bitcoin coin"
+              className="rounded-3xl border border-white/10 w-full object-cover aspect-square"
+            />
           </div>
         </div>
       </section>
