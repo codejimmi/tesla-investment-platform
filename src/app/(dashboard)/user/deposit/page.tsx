@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useSession } from "next-auth/react"
-import { Copy, Check } from "lucide-react"
+import { Copy, Check, Upload, X } from "lucide-react"
 
 type Wallet = {
   id: string
@@ -25,10 +25,12 @@ export default function DepositPage() {
   const [selected, setSelected] = useState<string>("")
   const [amount, setAmount] = useState("")
   const [txHash, setTxHash] = useState("")
-  const [proofUrl, setProofUrl] = useState("")
+  const [proofImage, setProofImage] = useState<string | null>(null)
+  const [proofFileName, setProofFileName] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     fetch("/api/wallets")
@@ -52,6 +54,31 @@ export default function DepositPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith("image/")) {
+      setMessage({ type: "error", text: "Please upload an image file" })
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ type: "error", text: "Image must be under 5MB" })
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      setProofImage(reader.result as string)
+      setProofFileName(file.name)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function clearProof() {
+    setProofImage(null)
+    setProofFileName(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!session) return
@@ -66,7 +93,7 @@ export default function DepositPage() {
           amount: parseFloat(amount),
           currency: selected,
           txHash: txHash || undefined,
-          proofUrl: proofUrl || undefined,
+          proofUrl: proofImage || undefined,
         }),
       })
       const data = await res.json()
@@ -79,7 +106,7 @@ export default function DepositPage() {
         })
         setAmount("")
         setTxHash("")
-        setProofUrl("")
+        clearProof()
       }
     } catch {
       setMessage({ type: "error", text: "Something went wrong" })
@@ -93,7 +120,7 @@ export default function DepositPage() {
       <div>
         <h1 className="text-2xl font-bold">Deposit Funds</h1>
         <p className="text-gray-400 mt-1">
-          Send crypto to the address below and submit your transaction details for approval.
+          Send crypto to the address below and upload proof of payment for approval.
         </p>
       </div>
 
@@ -182,14 +209,41 @@ export default function DepositPage() {
         </div>
 
         <div>
-          <label className="block text-sm text-gray-400 mb-1.5">Proof URL / Screenshot link (optional)</label>
+          <label className="block text-sm text-gray-400 mb-1.5">Proof of Payment (screenshot)</label>
           <input
-            type="url"
-            value={proofUrl}
-            onChange={(e) => setProofUrl(e.target.value)}
-            className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-tesla-red"
-            placeholder="https://..."
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
           />
+          {proofImage ? (
+            <div className="relative inline-block">
+              <img
+                src={proofImage}
+                alt="Proof"
+                className="max-h-48 rounded-lg border border-white/10"
+              />
+              <button
+                type="button"
+                onClick={clearProof}
+                className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white"
+              >
+                <X size={14} />
+              </button>
+              <div className="text-xs text-gray-400 mt-1">{proofFileName}</div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full border-2 border-dashed border-white/20 hover:border-white/40 rounded-lg p-8 flex flex-col items-center gap-2 text-gray-400 hover:text-white transition"
+            >
+              <Upload size={24} />
+              <span className="text-sm">Click to upload screenshot</span>
+              <span className="text-xs text-gray-500">PNG, JPG up to 5MB</span>
+            </button>
+          )}
         </div>
 
         <button
