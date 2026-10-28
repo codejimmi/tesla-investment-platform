@@ -24,47 +24,68 @@ export default async function AdminDepositsPage() {
               <th className="pb-3 font-medium">User</th>
               <th className="pb-3 font-medium">Amount</th>
               <th className="pb-3 font-medium">Method</th>
-              <th className="pb-3 font-medium">Tx Hash / Proof</th>
+              <th className="pb-3 font-medium">Tx Hash</th>
+              <th className="pb-3 font-medium">Proof</th>
               <th className="pb-3 font-medium">Status</th>
               <th className="pb-3 font-medium">Date</th>
               <th className="pb-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {deposits.map((d) => (
-              <tr key={d.id} className="hover:bg-white/5">
-                <td className="py-4">
-                  <div className="font-medium">{d.user.name || "—"}</div>
-                  <div className="text-xs text-gray-500">{d.user.email}</div>
-                </td>
-                <td className="py-4 font-medium">{formatCurrency(Number(d.amount))}</td>
-                <td className="py-4">{d.currency?.replace("_", " ") || "—"}</td>
-                <td className="py-4 text-xs font-mono max-w-[160px] truncate">
-                  {d.txHash || d.proofUrl || "—"}
-                </td>
-                <td className="py-4">
-                  <span
-                    className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      d.status === "APPROVED" || d.status === "COMPLETED"
-                        ? "bg-emerald-500/15 text-emerald-400"
-                        : d.status === "PENDING"
-                        ? "bg-amber-500/15 text-amber-400"
-                        : "bg-red-500/15 text-red-400"
-                    }`}
-                  >
-                    {d.status}
-                  </span>
-                </td>
-                <td className="py-4 text-gray-400 text-xs">
-                  {new Date(d.createdAt).toLocaleString()}
-                </td>
-                <td className="py-4">
-                  {d.status === "PENDING" && (
-                    <DepositActions depositId={d.id} userId={d.userId} amount={Number(d.amount)} />
-                  )}
-                </td>
-              </tr>
-            ))}
+            {deposits.map((d) => {
+              const isImage = d.proofUrl?.startsWith("data:image")
+              return (
+                <tr key={d.id} className="hover:bg-white/5">
+                  <td className="py-4">
+                    <div className="font-medium">{d.user.name || "—"}</div>
+                    <div className="text-xs text-gray-500">{d.user.email}</div>
+                  </td>
+                  <td className="py-4 font-medium">{formatCurrency(Number(d.amount))}</td>
+                  <td className="py-4">{d.currency?.replace("_", " ") || "—"}</td>
+                  <td className="py-4 text-xs font-mono max-w-[140px] truncate" title={d.txHash || ""}>
+                    {d.txHash || "—"}
+                  </td>
+                  <td className="py-4">
+                    {isImage && d.proofUrl ? (
+                      <a href={d.proofUrl} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src={d.proofUrl}
+                          alt="Proof"
+                          className="h-12 w-16 object-cover rounded border border-white/10"
+                        />
+                      </a>
+                    ) : d.proofUrl ? (
+                      <a href={d.proofUrl} target="_blank" className="text-tesla-red text-xs hover:underline">
+                        View
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td className="py-4">
+                    <span
+                      className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        d.status === "APPROVED" || d.status === "COMPLETED"
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : d.status === "PENDING"
+                          ? "bg-amber-500/15 text-amber-400"
+                          : "bg-red-500/15 text-red-400"
+                      }`}
+                    >
+                      {d.status}
+                    </span>
+                  </td>
+                  <td className="py-4 text-gray-400 text-xs">
+                    {new Date(d.createdAt).toLocaleString()}
+                  </td>
+                  <td className="py-4">
+                    {d.status === "PENDING" && (
+                      <DepositActions depositId={d.id} userId={d.userId} amount={Number(d.amount)} />
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
         {deposits.length === 0 && (
